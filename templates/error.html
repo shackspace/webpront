@@ -1,0 +1,24 @@
+{% extends "index.html" %}
+{% block meta %}
+   {% set sitename='error' %}
+{% end %}
+{% block content %}
+   <div class="container">
+      <div class="row">
+         <div class="offset3 span6">
+            <h1>{{ error_code }}:
+               {% if error_code == 400 %}Bad Request
+               {% elif error_code == 401 %}Unauthorized
+               {% elif error_code == 403 %}Forbidden
+               {% elif error_code == 404 %}Not Found
+               {% elif error_code == 500 %}Internal Server Error
+               {% elif error_code == 501 %}Not Implemented
+               {% else %}No Text Defined For This Error Code
+               {% end %}</h1>
+            <p>
+                Thank you for encountering this error.
+             </p>  
+         </div>
+      </div>
+   </div>
+{% end %}

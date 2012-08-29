@@ -1,0 +1,30 @@
+{% extends "index.html" %}
+{% block extend_titlebar %}
+      <a class="btn btn-danger pull-right" href="/disconnect">Disconnect</a>
+      <p class="navbar-text pull-right">{{ device }} @ {{ baud }}&nbsp;&nbsp;</p>
+   </div>
+{% end %}
+{% block content %}
+   <div class="row-fluid">
+      <div class="span4">
+         <div class="well">
+            <h4>Movement</h4>
+            {% for dim in ['x', 'y', 'z'] %}
+               <div class="pagination">
+                  <ul>
+                     <li class="disabled"><a href="#">-{{dim}}</a></li>
+                     {% for delta in [-100, -10, -1, -0.1] %}
+                        <li><a class="{{ dim }}" data-delta="{{ delta }}">{{ abs(delta) }}</a></li>
+                     {% end %}
+                     <li class="disabled"><a href="#">|</a></li>
+                     {% for delta in [0.1, 1, 10, 100] %}
+                        <li><a class="{{ dim }}" data-delta="{{ delta }}">{{ abs(delta) }}</a></li>
+                     {% end %}
+                     <li class="disabled"><a href="#">{{dim}}</a></li>
+                  </ul>
+               </div>
+            {% end %}
+         </div>
+      </div>
+   </div>
+{% end %}

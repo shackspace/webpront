@@ -1,0 +1,31 @@
+%YAML 1.1
+---
+core:
+  name: My 3D printer
+  cookie_secret: MDhhuFdjQIW0iw8bCgXNfJ1hWlFrrUwZl5/u2A4YOrs=
+  printer:
+    devices:
+      # specify the paths of the devices that should not be shown to the user
+      excludes:
+        - /dev/tty.Bluetooth-PDA-Sync
+      # if at least one include is set, only those devices will be shown
+      # to the user
+      includes: []
+    bauds:
+      # Usable ports. Leave empty to let the user enter an arbitrary port.
+      - 2400
+      - 9600
+      - 19200
+      - 38400
+      - 57600
+      - 115200
+      - 250000
+  greeting:
+    # one of these: plain (default), markdown
+    type: markdown
+    text: |
+      ## Welcome to my printer interface!
+      
+      Choose an interface and a port to connect to a printer.
+login:
+  enabled: no
