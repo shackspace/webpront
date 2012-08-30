@@ -14,6 +14,7 @@ class Session(object):
         self.printer_connection = PronsoleInterface()
         self.device_id = -1
         self.stored_notifications = []
+        self.uid = None
     
     def update_timeout(self):
         self.timeout = datetime.now() + Session.LIFETIME

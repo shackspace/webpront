@@ -14,11 +14,11 @@
                   <ul>
                      <li class="disabled"><a href="#">-{{dim}}</a></li>
                      {% for delta in [-100, -10, -1, -0.1] %}
-                        <li><a class="{{ dim }}" data-delta="{{ delta }}">{{ abs(delta) }}</a></li>
+                        <li><a class="movement" data-delta="{{ delta }}" data-dim="{{ dim }}" href="#">{{ abs(delta) }}</a></li>
                      {% end %}
                      <li class="disabled"><a href="#">|</a></li>
                      {% for delta in [0.1, 1, 10, 100] %}
-                        <li><a class="{{ dim }}" data-delta="{{ delta }}">{{ abs(delta) }}</a></li>
+                        <li><a class="movement" data-delta="{{ delta }}" data-dim="{{ dim }}" href="#">{{ abs(delta) }}</a></li>
                      {% end %}
                      <li class="disabled"><a href="#">{{dim}}</a></li>
                   </ul>
@@ -27,4 +27,13 @@
          </div>
       </div>
    </div>
+{% end %}
+{% block js %}
+<script>
+   var ws = new WebSocket("ws://localhost:8888/direct/{{ identify }}");
+   ws.onmessage = function (evt) {
+      alert(evt.data);
+   };
+</script>
+<script src="/static/js/interface.js"></script>
 {% end %}

@@ -23,4 +23,4 @@ def scanserial():
 random.seed()
 
 def generate_session_id():
-    return str(sha256(str(int(time()) + random.random())))
+    return sha256(str(int(time()) + random.random())).hexdigest()

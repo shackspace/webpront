@@ -25,3 +25,5 @@ devices = build_device_list()
 device_occupations = {}
 
 sessions = {}
+
+websocket_allowed_connections = {}

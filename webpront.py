@@ -2,6 +2,7 @@
 
 import tornado.ioloop
 import tornado.web
+import tornado.websocket
 import os
 from datetime import datetime
 from session import Session
@@ -36,6 +37,7 @@ class BaseHandler(tornado.web.RequestHandler):
             self.set_secure_cookie("sessionid", uid)
         if uid not in globals.sessions or globals.sessions[uid].timeout < datetime.now():
             globals.sessions[uid] = Session(globals.settings)
+            globals.sessions[uid].uid = uid
         return globals.sessions[uid]
     
     def write_error(self, status_code, **kwargs):
@@ -49,9 +51,12 @@ class BaseHandler(tornado.web.RequestHandler):
 class MainHandler(BaseHandler):
     def get(self):
         if self.current_user.printer_connection.p.printer:
+            connection_id = helpers.generate_session_id()
+            globals.websocket_allowed_connections[connection_id] = self.current_user
             self.render("templates/interface.html",
                         device=self.current_user.printer_connection.p.port,
-                        baud=self.current_user.printer_connection.p.baud)
+                        baud=self.current_user.printer_connection.p.baud,
+                        identify=connection_id)
         else:
             self.render("templates/connect.html",
                         devices=globals.devices,
@@ -93,6 +98,25 @@ class AboutHandler(BaseHandler):
     def get(self):
         self.render("templates/about.html", about=globals.settings.core.about.text)
 
+
+class WebsocketHandler(tornado.websocket.WebSocketHandler):
+    def open(self, uid):
+        if uid in globals.websocket_allowed_connections:
+            self.session = globals.websocket_allowed_connections[uid]
+            print "Websocket opened for connection %s" % self.session.uid
+        else:
+            print "Denying connection for %s" % uid
+            self.session = None
+            self.close()
+    
+    def on_message(self, message):
+        if self.session:
+            print message
+            self.session.printer_connection.onecmd(message)
+        
+    def on_close(self):
+        print "Websocket closed for connection %s" % (self.session.uid if self.session else "[unknown]")
+
 settings = {
     "static_path": os.path.join(os.path.dirname(__file__), "static"),
     "cookie_secret": globals.settings.core.cookie_secret
@@ -101,7 +125,8 @@ settings = {
 application = tornado.web.Application([
     (r"/", MainHandler),
     (r"/about", AboutHandler),
-    (r"/disconnect", DisconnectHandler)
+    (r"/disconnect", DisconnectHandler),
+    (r"/direct/(.*)", WebsocketHandler)
 ], **settings)
 
 if __name__ == "__main__":
