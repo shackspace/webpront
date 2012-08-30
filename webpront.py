@@ -104,6 +104,7 @@ class WebsocketHandler(tornado.websocket.WebSocketHandler):
         if uid in globals.websocket_allowed_connections:
             self.session = globals.websocket_allowed_connections[uid]
             print "Websocket opened for connection %s" % self.session.uid
+            self.t = helpers.Tee(self.catchprint)
         else:
             print "Denying connection for %s" % uid
             self.session = None
@@ -111,11 +112,16 @@ class WebsocketHandler(tornado.websocket.WebSocketHandler):
     
     def on_message(self, message):
         if self.session:
-            print message
+            self.write_message(message)
             self.session.printer_connection.onecmd(message)
+    
+    def catchprint(self,l):
+        if self:
+            self.write_message(l)
         
     def on_close(self):
         print "Websocket closed for connection %s" % (self.session.uid if self.session else "[unknown]")
+        self.t = None
 
 settings = {
     "static_path": os.path.join(os.path.dirname(__file__), "static"),

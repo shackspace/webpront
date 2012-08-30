@@ -1,4 +1,4 @@
-import os, glob
+import os, glob, sys
 from hashlib import sha256
 import random
 from time import gmtime, time
@@ -24,3 +24,16 @@ random.seed()
 
 def generate_session_id():
     return sha256(str(int(time()) + random.random())).hexdigest()
+
+class Tee(object):
+    def __init__(self, target):
+        self.stdout = sys.stdout
+        sys.stdout = self
+        self.target=target
+    def __del__(self):
+        sys.stdout = self.stdout
+    def write(self, data):
+        self.target(data)
+        self.stdout.write(data.encode("utf-8"))
+    def flush(self):
+        self.stdout.flush()

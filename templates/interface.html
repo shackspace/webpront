@@ -1,4 +1,7 @@
 {% extends "index.html" %}
+{% block stylesheets %}
+<link rel="stylesheet" href="/static/css/interface.css" type="text/css" />
+{% end %}
 {% block extend_titlebar %}
       <a class="btn btn-danger pull-right" href="/disconnect">Disconnect</a>
       <p class="navbar-text pull-right">{{ device }} @ {{ baud }}&nbsp;&nbsp;</p>
@@ -6,7 +9,7 @@
 {% end %}
 {% block content %}
    <div class="row-fluid">
-      <div class="span4">
+      <div class="span8">
          <div class="well">
             <h4>Movement</h4>
             {% for dim in ['x', 'y', 'z'] %}
@@ -26,13 +29,20 @@
             {% end %}
          </div>
       </div>
+      <div class="span4">
+         <textarea id="console" class="span4" readonly="readonly"></textarea>
+         <div class="input-prepend">
+            <span class="add-on">Prompt</span><input class="span4" id="console-input" type="text"/>
+         </div>
+      </div>
    </div>
 {% end %}
 {% block js %}
 <script>
    var ws = new WebSocket("ws://localhost:8888/direct/{{ identify }}");
    ws.onmessage = function (evt) {
-      alert(evt.data);
+      var txt = $("textarea#console");
+      txt.val(txt.val() + "\n" + evt.data);
    };
 </script>
 <script src="/static/js/interface.js"></script>
