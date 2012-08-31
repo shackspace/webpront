@@ -29,10 +29,12 @@
             {% end %}
          </div>
       </div>
-      <div class="span4">
-         <textarea id="console" class="span4" readonly="readonly"></textarea>
-         <div class="input-prepend">
-            <span class="add-on">Prompt</span><input class="span4" id="console-input" type="text"/>
+      <div id="console-wrapper">
+         <div id="console-output">
+         </div>
+         <div id="console-input" class="input-prepend">
+            <span class="add-on">$</span>
+            <input type="text"/></td>
          </div>
       </div>
    </div>
@@ -41,8 +43,7 @@
 <script>
    var ws = new WebSocket("ws://localhost:8888/direct/{{ identify }}");
    ws.onmessage = function (evt) {
-      var txt = $("textarea#console");
-      txt.val(txt.val() + "\n" + evt.data);
+      appendToConsole("out", evt.data);
    };
    serverDisconnect = function() {
       window.location.href = "http://localhost:8888/disconnect/lostConnection";

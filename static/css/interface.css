@@ -1,5 +1,57 @@
-#console {
-   min-height: 400px;
-   max-height: 100%;
-   min-width: 300px;
+#console-output {
+   position: absolute;
+   top: 10px;
+   left: 10px;
+   right: 0;
+   bottom: 46px;
+   background: black;
+   overflow-y: auto;
+   vertical-align: top;
+   font-family: Menlo, Consolas, Monaco, "Lucida Console", monospace;
+   font-size: x-small;
+   color: #00a900;
+}
+
+#console-input {
+   position: absolute;
+   bottom: 10px;
+   left: 10px;
+   right: 0;
+   height: 30px;
+}
+#console-input > .add-on {
+   font-family: Menlo, Consolas, Monaco, "Lucida Console", monospace;
+   width: 20px;
+}
+
+#console-input input {
+   font-family: Menlo, Consolas, Monaco, "Lucida Console", monospace;
+   width: 260px;
+}
+
+.console-line {
+   display: block;
+   margin: 0;
+   padding: 0 2px 0 2px;
+}
+
+.console-line.in {
+   background: #333;
+}
+
+.console-line.out {
+   background: black;
+}
+
+#console-wrapper {
+   position: fixed;
+   top: 80px;
+   bottom: 20px;
+   right: 0;
+   width: 300px;
+   padding: 0.5em;
+   border-top-left-radius: 10px;
+   border-bottom-left-radius: 10px;
+   box-shadow: 0 0 7px #aaa;
+   background: #080;
 }

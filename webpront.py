@@ -116,7 +116,6 @@ class WebsocketHandler(tornado.websocket.WebSocketHandler):
     
     def on_message(self, message):
         if self.session:
-            self.write_message(message)
             self.session.pronsole.onecmd(message)
     
     def catchprint(self,l):
