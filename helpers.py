@@ -1,7 +1,8 @@
 import os, glob, sys
 from hashlib import sha256
 import random
-from time import gmtime, time
+from time import time
+from datetime import datetime
 
 def scanserial():
    """scan for available ports. return a list of device names."""
@@ -22,18 +23,16 @@ def scanserial():
 
 random.seed()
 
-def generate_session_id():
+def generate_random_hash():
     return sha256(str(int(time()) + random.random())).hexdigest()
 
-class Tee(object):
-    def __init__(self, target):
-        self.stdout = sys.stdout
-        sys.stdout = self
-        self.target=target
-    def __del__(self):
-        sys.stdout = self.stdout
-    def write(self, data):
-        self.target(data)
-        self.stdout.write(data.encode("utf-8"))
-    def flush(self):
-        self.stdout.flush()
+class TimeboundObject(object):
+    def __init__(self, ttl):
+        self.ttl = ttl
+        self.refreshTimeout()
+    
+    def refreshTimeout(self):
+        self.timeout = datetime.now() + self.ttl
+    
+    def isValid(self):
+        return datetime.now() < self.timeout

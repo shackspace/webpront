@@ -26,4 +26,18 @@ device_occupations = {}
 
 sessions = {}
 
-websocket_allowed_connections = {}
+ws_handles = {}
+
+def delete_expired_objects():
+    expired = []
+    for key, session in sessions.iteritems():
+        if not session.isValid():
+            expired.append(key)
+    for key in expired:
+        del sessions[key]
+    del expired[:]
+    for key, handle in ws_handles.iteritems():
+        if not handle.isValid():
+            expired.append(key)
+    for key in expired:
+        del ws_handles[key]

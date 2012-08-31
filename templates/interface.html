@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/static/css/interface.css" type="text/css" />
 {% end %}
 {% block extend_titlebar %}
-      <a class="btn btn-danger pull-right" href="/disconnect">Disconnect</a>
+      <a class="btn btn-danger pull-right" href="/disconnect/user">Disconnect</a>
       <p class="navbar-text pull-right">{{ device }} @ {{ baud }}&nbsp;&nbsp;</p>
    </div>
 {% end %}
@@ -44,6 +44,11 @@
       var txt = $("textarea#console");
       txt.val(txt.val() + "\n" + evt.data);
    };
+   serverDisconnect = function() {
+      window.location.href = "http://localhost:8888/disconnect/lostConnection";
+   }
+   ws.onerror = serverDisconnect;
+   ws.onclose = serverDisconnect;
 </script>
 <script src="/static/js/interface.js"></script>
 {% end %}
